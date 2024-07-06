@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { Audio } from "expo-av";
 import * as Speech from "expo-speech";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
+import Carousel from "react-native-snap-carousel";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
   const [soundObject, setSoundObject] = useState(null);
 
-  // Carregar e configurar o objeto de áudio
   useEffect(() => {
     return () => {
-      // Limpar o objeto de áudio ao desmontar o componente
       if (soundObject) {
         soundObject.unloadAsync();
       }
-      // Parar qualquer fala em curso ao desmontar
       Speech.stop();
     };
   }, []);
@@ -54,10 +61,24 @@ export default function DetailsScreen({ route, navigation }) {
     Speech.stop();
     navigation.goBack();
   };
+  
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.carouselItem}>
+        <Image source={item} style={styles.image} />
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <Image source={item.image} style={styles.image} />
+      <Carousel
+        data={item.images}
+        renderItem={renderItem}
+        sliderWidth={screenWidth}
+        itemWidth={screenWidth}
+        onSnapToItem={(index) => setActiveSlide(index)}
+      />
       <Text style={styles.description}>
         Descrição do item: {item.description}
       </Text>
@@ -80,9 +101,24 @@ export default function DetailsScreen({ route, navigation }) {
           <MaterialIcons name="record-voice-over" size={24} color="black" />
           <Text style={styles.buttonText}>Falar Nome</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={playSound}>
-          <Entypo name="sound" size={24} color="black" />
-          <Text style={styles.buttonText}>Tocar Som</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={playSound}
+          disabled={!item.sound}
+        >
+          <Entypo
+            name="sound"
+            size={24}
+            color={!item.sound ? "gray" : "black"}
+          />
+          <Text
+            style={[
+              styles.buttonText,
+              { color: !item.sound ? "gray" : "black" },
+            ]}
+          >
+            Tocar Som
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -92,17 +128,22 @@ export default function DetailsScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: "#fff",
+  },
+  carouselContainer: {
+    height: screenHeight * 0.7,
+  },
+  carouselItem: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     width: "100%",
-    height: 200,
-    marginBottom: 20,
+    height: "100%",
   },
   description: {
     fontSize: 16,
-    marginBottom: 20,
+    margin: 20,
   },
   buttons: {
     flexDirection: "row",

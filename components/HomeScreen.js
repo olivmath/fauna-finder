@@ -20,7 +20,7 @@ export default function HomeScreen({ navigation }) {
             onPress={() => navigation.navigate("Details", { item })}
           >
             <View style={styles.item}>
-              <Image source={item.image} style={styles.image} />
+              <Image source={item.images[0]} style={styles.image} />
             </View>
           </TouchableOpacity>
         )}

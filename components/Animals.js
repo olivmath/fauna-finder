@@ -1,12 +1,17 @@
 export const Animals = [
   {
     id: 1,
-    name: "Pavão",
+    name: "Urubu-Rei",
     description:
-      "O pavão é conhecido por suas penas exuberantes e coloridas, especialmente o macho que exibe um leque de penas durante o cortejo.",
-    image: require("../assets/animals/pavao.jpg"),
-    sound: require("../assets/animals/pavao.mp3"),
+      "O urubu-rei é uma ave de rapina impressionante, conhecida por sua plumagem colorida e papel essencial na limpeza dos ecossistemas ao consumir carcaças de animais mortos.",
+    images: [
+      require("../assets/animals/urubu-rei/1.jpg"),
+      require("../assets/animals/urubu-rei/2.jpg"),
+      require("../assets/animals/urubu-rei/3.jpg"),
+    ],
+    sound: false,
   },
+
   // {
   //   id: 2,
   //   name: "Garça",

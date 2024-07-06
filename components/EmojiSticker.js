@@ -10,6 +10,13 @@ export default function EmojiSticker({ imageSize, stickerSource }) {
   const translateY = useSharedValue(0);
   const scaleImage = useSharedValue(imageSize);
 
+  const imageStyle = useAnimatedStyle(() => {
+    return {
+      width: withSpring(scaleImage.value),
+      height: withSpring(scaleImage.value),
+    };
+  });
+
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onStart(() => {
@@ -17,13 +24,6 @@ export default function EmojiSticker({ imageSize, stickerSource }) {
         scaleImage.value = scaleImage.value * 2;
       }
     });
-
-  const imageStyle = useAnimatedStyle(() => {
-    return {
-      width: withSpring(scaleImage.value),
-      height: withSpring(scaleImage.value),
-    };
-  });
 
   const drag = Gesture.Pan().onChange((event) => {
     translateX.value += event.changeX;

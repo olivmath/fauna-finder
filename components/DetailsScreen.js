@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import * as Speech from "expo-speech";
-import { MaterialIcons, Entypo } from "@expo/vector-icons"; // Importando ícones do Material Icons e Entypo
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
-  const [soundObject, setSoundObject] = useState(null); // Estado para controlar o objeto de áudio
+  const [soundObject, setSoundObject] = useState(null);
 
   // Carregar e configurar o objeto de áudio
   useEffect(() => {
@@ -15,17 +15,24 @@ export default function DetailsScreen({ route, navigation }) {
       if (soundObject) {
         soundObject.unloadAsync();
       }
+      // Parar qualquer fala em curso ao desmontar
+      Speech.stop();
     };
   }, []);
 
-  const speak = () => {
-    Speech.speak(item.name);
+  const speak = (text) => {
+    // Parar qualquer fala em curso antes de iniciar uma nova
+    Speech.stop();
+    if (soundObject) {
+      soundObject.stopAsync();
+    }
+    Speech.speak(text);
   };
 
   const playSound = async () => {
     // Verifica se já há um som em reprodução
     if (soundObject) {
-      await soundObject.unloadAsync(); // Descarrega o som atual
+      await soundObject.stopAsync(); // Descarrega o som atual
     }
 
     const newSoundObject = new Audio.Sound();
@@ -43,6 +50,8 @@ export default function DetailsScreen({ route, navigation }) {
     if (soundObject) {
       soundObject.stopAsync(); // Interrompe o som atual antes de voltar
     }
+    // Parar qualquer fala em curso ao voltar
+    Speech.stop();
     navigation.goBack();
   };
 
@@ -57,7 +66,17 @@ export default function DetailsScreen({ route, navigation }) {
           <MaterialIcons name="arrow-back" size={24} color="black" />
           <Text style={styles.buttonText}>Voltar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={speak}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => speak(item.description)}
+        >
+          <MaterialIcons name="description" size={24} color="black" />
+          <Text style={styles.buttonText}>Descrição</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => speak(item.name)}
+        >
           <MaterialIcons name="record-voice-over" size={24} color="black" />
           <Text style={styles.buttonText}>Falar Nome</Text>
         </TouchableOpacity>

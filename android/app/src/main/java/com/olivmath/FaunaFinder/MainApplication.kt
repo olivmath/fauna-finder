@@ -1,4 +1,4 @@
-package com.olivmath.StickerSmash
+package com.olivmath.FaunaFinder
 
 import android.app.Application
 import android.content.res.Configuration

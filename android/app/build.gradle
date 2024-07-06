@@ -83,9 +83,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.olivmath.StickerSmash'
+    namespace 'com.olivmath.FaunaFinder'
     defaultConfig {
-        applicationId 'com.olivmath.StickerSmash'
+        applicationId 'com.olivmath.FaunaFinder'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

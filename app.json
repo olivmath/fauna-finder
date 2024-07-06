@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "StickerSmash",
-    "slug": "StickerSmash",
+    "name": "FaunaFinder",
+    "slug": "FaunaFinder",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,21 +9,26 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#C5D6D4"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.olivmath.StickerSmash"
+      "bundleIdentifier": "com.olivmath.FaunaFinder"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#F8F9FA"
       },
-      "package": "com.olivmath.StickerSmash"
+      "package": "com.olivmath.FaunaFinder"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "13dae53c-c199-4e08-9047-efd156faf081"
+      }
     }
   }
 }

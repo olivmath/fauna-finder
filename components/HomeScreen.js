@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <FlatList
         data={Animals}
-        keyExtractor={(item) => item.id.toString()} // Usar item.id como chave única
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate("Details", { item })}
@@ -35,10 +35,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   item: {
-    padding: 10,
+    margin: 10,
     alignItems: "center",
   },
   image: {
+    borderRadius: 8,
     width: 250,
     height: 250,
   },

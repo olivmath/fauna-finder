@@ -12,7 +12,7 @@ import * as Speech from "expo-speech";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import Carousel from "react-native-snap-carousel";
 
-const { width: screenWidth } = Dimensions.get("window");
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
@@ -25,10 +25,9 @@ export default function DetailsScreen({ route, navigation }) {
       }
       Speech.stop();
     };
-  }, []);
+  }, [soundObject]);
 
   const speak = (text) => {
-    // Parar qualquer fala em curso antes de iniciar uma nova
     Speech.stop();
     if (soundObject) {
       soundObject.stopAsync();
@@ -37,35 +36,34 @@ export default function DetailsScreen({ route, navigation }) {
   };
 
   const playSound = async () => {
-    // Verifica se já há um som em reprodução
+    if (!item.sound) return;
+
     if (soundObject) {
-      await soundObject.stopAsync(); // Descarrega o som atual
+      await soundObject.stopAsync();
     }
 
     const newSoundObject = new Audio.Sound();
     try {
       await newSoundObject.loadAsync(item.sound);
       await newSoundObject.playAsync();
-      setSoundObject(newSoundObject); // Armazena o novo objeto de áudio no estado
+      setSoundObject(newSoundObject);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleGoBack = () => {
-    // Verifica se há um som em reprodução ao voltar
     if (soundObject) {
-      soundObject.stopAsync(); // Interrompe o som atual antes de voltar
+      soundObject.stopAsync();
     }
-    // Parar qualquer fala em curso ao voltar
     Speech.stop();
     navigation.goBack();
   };
-  
-  const renderItem = ({ item }) => {
+
+  const renderItem = ({ item: carouselItem }) => {
     return (
       <View style={styles.carouselItem}>
-        <Image source={item} style={styles.image} />
+        <Image source={carouselItem} style={styles.image} />
       </View>
     );
   };
@@ -77,7 +75,6 @@ export default function DetailsScreen({ route, navigation }) {
         renderItem={renderItem}
         sliderWidth={screenWidth}
         itemWidth={screenWidth}
-        onSnapToItem={(index) => setActiveSlide(index)}
       />
       <Text style={styles.description}>
         Descrição do item: {item.description}

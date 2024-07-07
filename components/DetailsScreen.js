@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { Audio } from "expo-av";
 import * as Speech from "expo-speech";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
+import Carousel from "react-native-snap-carousel";
+
+const { width: screenWidth } = Dimensions.get("window");
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
@@ -55,9 +65,22 @@ export default function DetailsScreen({ route, navigation }) {
     navigation.goBack();
   };
 
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.carouselItem}>
+        <Image source={item} style={styles.image} />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Image source={item.images[0]} style={styles.image} />
+      <Carousel
+        data={item.images}
+        renderItem={renderItem}
+        sliderWidth={screenWidth}
+        itemWidth={screenWidth}
+      />
       <Text style={styles.description}>
         Descrição do item: {item.description}
       </Text>

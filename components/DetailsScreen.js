@@ -28,7 +28,7 @@ export default function DetailsScreen({ route, navigation }) {
       // Parar qualquer fala em curso ao desmontar
       Speech.stop();
     };
-  }, []);
+  }, [soundObject]);
 
   const speak = (text) => {
     // Parar qualquer fala em curso antes de iniciar uma nova

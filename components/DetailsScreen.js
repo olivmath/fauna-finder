@@ -137,10 +137,16 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#fff",
   },
+  carouselContainer: {
+    height: screenWidth,
+  },
+  carouselItem: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
   image: {
     width: "100%",
-    height: 200,
-    marginBottom: 20,
+    height: "100%",
   },
   description: {
     fontSize: 16,

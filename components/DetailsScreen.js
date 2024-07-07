@@ -1,33 +1,27 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import * as Speech from "expo-speech";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
-import Carousel from "react-native-snap-carousel";
-
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
   const [soundObject, setSoundObject] = useState(null);
 
+  // Carregar e configurar o objeto de áudio
   useEffect(() => {
     return () => {
+      // Limpar o objeto de áudio ao desmontar o componente
       if (soundObject) {
         soundObject.unloadAsync();
       }
+      // Parar qualquer fala em curso ao desmontar
       Speech.stop();
     };
-  }, [soundObject]);
+  }, []);
 
   const speak = (text) => {
+    // Parar qualquer fala em curso antes de iniciar uma nova
     Speech.stop();
     if (soundObject) {
       soundObject.stopAsync();
@@ -36,53 +30,45 @@ export default function DetailsScreen({ route, navigation }) {
   };
 
   const playSound = async () => {
-    if (!item.sound) return;
-
+    // Verifica se já há um som em reprodução
     if (soundObject) {
-      await soundObject.stopAsync();
+      await soundObject.stopAsync(); // Descarrega o som atual
     }
 
     const newSoundObject = new Audio.Sound();
     try {
       await newSoundObject.loadAsync(item.sound);
       await newSoundObject.playAsync();
-      setSoundObject(newSoundObject);
+      setSoundObject(newSoundObject); // Armazena o novo objeto de áudio no estado
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleGoBack = () => {
+    // Verifica se há um som em reprodução ao voltar
     if (soundObject) {
-      soundObject.stopAsync();
+      soundObject.stopAsync(); // Interrompe o som atual antes de voltar
     }
+    // Parar qualquer fala em curso ao voltar
     Speech.stop();
     navigation.goBack();
   };
 
-  const renderItem = ({ item: carouselItem }) => {
-    return (
-      <View style={styles.carouselItem}>
-        <Image source={carouselItem} style={styles.image} />
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
-      <Carousel
-        data={item.images}
-        renderItem={renderItem}
-        sliderWidth={screenWidth}
-        itemWidth={screenWidth}
-      />
+      <Image source={item.image} style={styles.image} />
       <Text style={styles.description}>
         Descrição do item: {item.description}
       </Text>
       <View style={styles.buttons}>
         <TouchableOpacity style={styles.button} onPress={handleGoBack}>
-          <MaterialIcons name="arrow-back" size={24} color="black" />
-          <Text style={styles.buttonText}>Voltar</Text>
+          <MaterialIcons name="arrow-back" size={24} color="green" />
+          <Text
+            style={[styles.buttonText, { color: "green", fontWeight: "bold" }]}
+          >
+            Voltar
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
@@ -104,14 +90,14 @@ export default function DetailsScreen({ route, navigation }) {
           disabled={!item.sound}
         >
           <Entypo
-            name="sound"
+            name={!item.sound ? "sound-mute" : "sound"}
             size={24}
-            color={!item.sound ? "gray" : "black"}
+            color={!item.sound ? "grey" : "black"}
           />
           <Text
             style={[
               styles.buttonText,
-              { color: !item.sound ? "gray" : "black" },
+              { color: !item.sound ? "grey" : "black" },
             ]}
           >
             Tocar Som
@@ -125,22 +111,17 @@ export default function DetailsScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
     backgroundColor: "#fff",
-  },
-  carouselContainer: {
-    height: screenHeight * 0.7,
-  },
-  carouselItem: {
-    justifyContent: "center",
-    alignItems: "center",
   },
   image: {
     width: "100%",
-    height: "100%",
+    height: 200,
+    marginBottom: 20,
   },
   description: {
     fontSize: 16,
-    margin: 20,
+    marginBottom: 20,
   },
   buttons: {
     flexDirection: "row",

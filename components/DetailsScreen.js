@@ -57,7 +57,7 @@ export default function DetailsScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image source={item.image} style={styles.image} />
+      <Image source={item.images[0]} style={styles.image} />
       <Text style={styles.description}>
         Descrição do item: {item.description}
       </Text>

@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, Dimensions } from "react-native";
 import { Audio } from "expo-av";
 import * as Speech from "expo-speech";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
@@ -18,20 +11,16 @@ export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
   const [soundObject, setSoundObject] = useState(null);
 
-  // Carregar e configurar o objeto de áudio
   useEffect(() => {
     return () => {
-      // Limpar o objeto de áudio ao desmontar o componente
       if (soundObject) {
         soundObject.unloadAsync();
       }
-      // Parar qualquer fala em curso ao desmontar
       Speech.stop();
     };
   }, [soundObject]);
 
   const speak = (text) => {
-    // Parar qualquer fala em curso antes de iniciar uma nova
     Speech.stop();
     if (soundObject) {
       soundObject.stopAsync();
@@ -40,75 +29,68 @@ export default function DetailsScreen({ route, navigation }) {
   };
 
   const playSound = async () => {
-    // Verifica se já há um som em reprodução
     if (soundObject) {
-      await soundObject.stopAsync(); // Descarrega o som atual
+      await soundObject.stopAsync();
     }
 
     const newSoundObject = new Audio.Sound();
     try {
       await newSoundObject.loadAsync(item.sound);
       await newSoundObject.playAsync();
-      setSoundObject(newSoundObject); // Armazena o novo objeto de áudio no estado
+      setSoundObject(newSoundObject);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleGoBack = () => {
-    // Verifica se há um som em reprodução ao voltar
     if (soundObject) {
-      soundObject.stopAsync(); // Interrompe o som atual antes de voltar
+      soundObject.stopAsync();
     }
-    // Parar qualquer fala em curso ao voltar
     Speech.stop();
     navigation.goBack();
   };
 
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.carouselItem}>
-        <Image source={item} style={styles.image} />
+      <View className="items-center">
+        <Image source={item} className="w-full h-full rounded-lg" />
       </View>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 p-5 bg-white">
       <Carousel
         data={item.images}
         renderItem={renderItem}
         sliderWidth={screenWidth}
         itemWidth={screenWidth}
       />
-      <Text style={styles.description}>
+      <Text className="text-lg mb-5">
         Descrição do item: {item.description}
       </Text>
-      <View style={styles.buttons}>
-        <TouchableOpacity style={styles.button} onPress={handleGoBack}>
-          <MaterialIcons name="arrow-back" size={24} color="green" />
-          <Text
-            style={[styles.buttonText, { color: "green", fontWeight: "bold" }]}
-          >
-            Voltar
-          </Text>
+      <View className="flex-row justify-around">
+        <TouchableOpacity className="items-center" onPress={handleGoBack}>
+          <MaterialIcons name="arrow-back" size={24} color="#34D399" />
+          <Text className="mt-1 text-primary font-bold">Voltar</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          className="items-center"
           onPress={() => speak(item.description)}
         >
           <MaterialIcons name="description" size={24} color="black" />
-          <Text style={styles.buttonText}>Descrição</Text>
+          <Text className="mt-1">Descrição</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          className="items-center"
           onPress={() => speak(item.name)}
         >
           <MaterialIcons name="record-voice-over" size={24} color="black" />
-          <Text style={styles.buttonText}>Falar Nome</Text>
+          <Text className="mt-1">Falar Nome</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          className="items-center"
           onPress={playSound}
           disabled={!item.sound}
         >
@@ -117,12 +99,7 @@ export default function DetailsScreen({ route, navigation }) {
             size={24}
             color={!item.sound ? "grey" : "black"}
           />
-          <Text
-            style={[
-              styles.buttonText,
-              { color: !item.sound ? "grey" : "black" },
-            ]}
-          >
+          <Text className={!item.sound ? "mt-1 text-gray-400" : "mt-1"}>
             Tocar Som
           </Text>
         </TouchableOpacity>
@@ -130,37 +107,3 @@ export default function DetailsScreen({ route, navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  carouselContainer: {
-    height: screenWidth,
-  },
-  carouselItem: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 8,
-  },
-  description: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  button: {
-    alignItems: "center",
-  },
-  buttonText: {
-    marginTop: 5,
-  },
-});

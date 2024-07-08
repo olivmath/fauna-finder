@@ -1,26 +1,20 @@
 import React from "react";
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-} from "react-native";
-
+import { View, FlatList, TouchableOpacity, Image } from "react-native";
 import { Animals } from "./Animals";
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-white">
       <FlatList
         data={Animals}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate("Details", { item })}
+            className="m-2"
           >
-            <View style={styles.item}>
-              <Image source={item.images[0]} style={styles.image} />
+            <View className="items-center">
+              <Image source={item.images[0]} className="rounded-lg w-64 h-64" />
             </View>
           </TouchableOpacity>
         )}
@@ -28,19 +22,3 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  item: {
-    margin: 10,
-    alignItems: "center",
-  },
-  image: {
-    borderRadius: 8,
-    width: 250,
-    height: 250,
-  },
-});
